@@ -234,12 +234,15 @@ class _TelaLancamentosState extends State<TelaLancamentos> {
           ),
         ),
 
-        Text(
-          formatoMoeda.format(valor),
-          style: TextStyle(
-            fontSize: destacar ? 18 : 15,
-            fontWeight: FontWeight.w800,
-            color: const Color(0xFF1E3A5F),
+        Flexible(
+          child: Text(
+            formatoMoeda.format(valor),
+            textAlign: TextAlign.right,
+            style: TextStyle(
+              fontSize: destacar ? 18 : 15,
+              fontWeight: FontWeight.w800,
+              color: const Color(0xFF1E3A5F),
+            ),
           ),
         ),
       ],
@@ -291,14 +294,9 @@ class _TelaLancamentosState extends State<TelaLancamentos> {
       listen: false,
     );
 
-    void editarLancamento() {
-      abrirTelaEditarLancamento(lancamento, controller);
-    }
-
     bool entrada = lancamento.tipoLancamento == 'entrada';
 
     String sinal = '-';
-
     IconData icone = Icons.arrow_upward_rounded;
 
     if (entrada) {
@@ -306,90 +304,169 @@ class _TelaLancamentosState extends State<TelaLancamentos> {
       icone = Icons.arrow_downward_rounded;
     }
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(18),
+      child: InkWell(
+        onTap: () {
+          abrirTelaEditarLancamento(lancamento, controller);
+        },
         borderRadius: BorderRadius.circular(18),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 42,
-            height: 42,
-            decoration: const BoxDecoration(
-              color: Color(0xFFF0F3F7),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icone, color: const Color(0xFF1E3A5F)),
-          ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ============================================================
+              // ÍCONE DO LANÇAMENTO
+              // ============================================================
 
-          const SizedBox(width: 12),
-
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  lancamento.categoria,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                  ),
+              Container(
+                width: 42,
+                height: 42,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF0F3F7),
+                  shape: BoxShape.circle,
                 ),
+                child: Icon(icone, color: const Color(0xFF1E3A5F)),
+              ),
 
-                if (lancamento.observacao != null &&
-                    lancamento.observacao!.isNotEmpty) ...[
-                  const SizedBox(height: 4),
+              const SizedBox(width: 12),
 
-                  Text(
-                    lancamento.observacao!,
-                    style: const TextStyle(fontSize: 12, color: Colors.black54),
-                  ),
-                ],
-                if (lancamento.criadoEm != null) ...[
-                  const SizedBox(height: 6),
+              // ============================================================
+              // INFORMAÇÕES DO LANÇAMENTO
+              // ============================================================
+              Expanded(child: construirInformacoesLancamento(lancamento)),
 
-                  construirDataHoraLancamento(lancamento),
-                ],
-              ],
-            ),
+              const SizedBox(width: 8),
+
+              // ============================================================
+              // VALOR E AÇÕES
+              // ============================================================
+              construirValorEAcoes(
+                lancamento: lancamento,
+                controller: controller,
+                sinal: sinal,
+              ),
+            ],
           ),
+        ),
+      ),
+    );
+  }
 
-          const SizedBox(width: 10),
+  // ============================================================
+  // INFORMAÇÕES DO LANÇAMENTO
+  // ============================================================
+
+  Widget construirInformacoesLancamento(LancamentoModel lancamento) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          lancamento.categoria,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+        ),
+
+        if (lancamento.observacao != null &&
+            lancamento.observacao!.isNotEmpty) ...[
+          const SizedBox(height: 4),
 
           Text(
-            '$sinal ${formatoMoeda.format(lancamento.valor)}',
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w800,
-              color: Color(0xFF1E3A5F),
-            ),
-          ),
-
-          const SizedBox(width: 4),
-
-          IconButton(
-            onPressed: editarLancamento,
-            tooltip: 'Editar lançamento',
-            icon: const Icon(
-              Icons.edit_outlined,
-              size: 20,
-              color: Color(0xFF1E3A5F),
-            ),
-          ),
-          IconButton(
-            onPressed: () {
-              confirmarExclusao(lancamento, controller);
-            },
-            tooltip: 'Excluir lançamento',
-            icon: const Icon(
-              Icons.delete_outline_rounded,
-              size: 20,
-              color: Colors.redAccent,
-            ),
+            lancamento.observacao!,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 12, color: Colors.black54),
           ),
         ],
+
+        if (lancamento.criadoEm != null) ...[
+          const SizedBox(height: 6),
+
+          construirDataHoraLancamento(lancamento),
+        ],
+      ],
+    );
+  }
+
+  // ============================================================
+  // VALOR E AÇÕES DO LANÇAMENTO
+  // ============================================================
+
+  Widget construirValorEAcoes({
+    required LancamentoModel lancamento,
+    required HomeController controller,
+    required String sinal,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(
+          '$sinal ${formatoMoeda.format(lancamento.valor)}',
+          textAlign: TextAlign.right,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w800,
+            color: Color(0xFF1E3A5F),
+          ),
+        ),
+
+        const SizedBox(height: 6),
+
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            construirBotaoEditar(lancamento, controller),
+
+            construirBotaoExcluir(lancamento, controller),
+          ],
+        ),
+      ],
+    );
+  }
+
+  // ============================================================
+  // BOTÃO EDITAR
+  // ============================================================
+
+  Widget construirBotaoEditar(
+    LancamentoModel lancamento,
+    HomeController controller,
+  ) {
+    return IconButton(
+      onPressed: () {
+        abrirTelaEditarLancamento(lancamento, controller);
+      },
+      tooltip: 'Editar lançamento',
+      visualDensity: VisualDensity.compact,
+      constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+      padding: const EdgeInsets.all(8),
+      icon: const Icon(Icons.edit_outlined, size: 20, color: Color(0xFF1E3A5F)),
+    );
+  }
+
+  // ============================================================
+  // BOTÃO EXCLUIR
+  // ============================================================
+
+  Widget construirBotaoExcluir(
+    LancamentoModel lancamento,
+    HomeController controller,
+  ) {
+    return IconButton(
+      onPressed: () {
+        confirmarExclusao(lancamento, controller);
+      },
+      tooltip: 'Excluir lançamento',
+      visualDensity: VisualDensity.compact,
+      constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+      padding: const EdgeInsets.all(8),
+      icon: const Icon(
+        Icons.delete_outline_rounded,
+        size: 20,
+        color: Colors.redAccent,
       ),
     );
   }
@@ -446,6 +523,7 @@ class _TelaLancamentosState extends State<TelaLancamentos> {
   // ============================================================
   // EXCLUIR LANÇAMENTO
   // ============================================================
+
   Future<void> confirmarExclusao(
     LancamentoModel lancamento,
     HomeController controller,
@@ -527,21 +605,25 @@ class _TelaLancamentosState extends State<TelaLancamentos> {
     }
 
     String dataFormatada = lancamento.obterDataFormatada();
-
     String horaFormatada = lancamento.obterHoraFormatada();
 
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         const Icon(Icons.schedule_outlined, size: 14, color: Colors.black45),
 
         const SizedBox(width: 4),
 
-        Text(
-          '$dataFormatada • $horaFormatada',
-          style: const TextStyle(
-            fontSize: 11,
-            color: Colors.black45,
-            fontWeight: FontWeight.w500,
+        Flexible(
+          child: Text(
+            '$dataFormatada • $horaFormatada',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 11,
+              color: Colors.black45,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ],
