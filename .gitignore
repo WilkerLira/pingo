@@ -1,0 +1,157 @@
+# ============================================================
+# MISCELLANEOUS
+# ============================================================
+
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+
+# ============================================================
+# INTELLIJ / ANDROID STUDIO
+# ============================================================
+
+*.iml
+*.ipr
+*.iws
+.idea/
+
+
+# ============================================================
+# VS CODE
+# ============================================================
+
+# A pasta .vscode pode ser versionada caso queira compartilhar
+# configurações do projeto.
+#
+# .vscode/
+
+
+# ============================================================
+# FLUTTER / DART / PUB
+# ============================================================
+
+**/doc/api/
+**/ios/Flutter/.last_build_id
+
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+.pub-cache/
+.pub/
+
+/build/
+/coverage/
+
+
+# ============================================================
+# SYMBOLICATION
+# ============================================================
+
+app.*.symbols
+
+
+# ============================================================
+# OBFUSCATION
+# ============================================================
+
+app.*.map.json
+
+
+# ============================================================
+# ANDROID - BUILDS
+# ============================================================
+
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+/android/.gradle/
+**/.gradle/
+
+
+# ============================================================
+# ANDROID - CONFIGURAÇÕES LOCAIS
+# ============================================================
+
+/android/local.properties
+
+
+# ============================================================
+# ASSINATURA ANDROID
+# ============================================================
+
+*.jks
+*.keystore
+
+/android/key.properties
+/android/keystore.properties
+
+
+# ============================================================
+# VARIÁVEIS DE AMBIENTE
+# ============================================================
+
+.env
+.env.*
+!.env.example
+
+*.env
+
+
+# ============================================================
+# FIREBASE - CONFIGURAÇÃO LOCAL
+# ============================================================
+
+# Cada instalação/desenvolvedor deverá utilizar sua própria
+# configuração Firebase.
+
+/android/app/google-services.json
+/lib/firebase_options.dart
+
+# Evita uma cópia acidental na raiz do projeto.
+/google-services.json
+
+
+# ============================================================
+# FIREBASE - CREDENCIAIS PRIVADAS
+# ============================================================
+
+*service-account*.json
+*service_account*.json
+*firebase-admin*.json
+*adminsdk*.json
+
+serviceAccountKey.json
+firebase-service-account.json
+
+
+# ============================================================
+# CHAVES E CERTIFICADOS
+# ============================================================
+
+*.pem
+*.p12
+*.pfx
+*.key
+
+
+# ============================================================
+# ARQUIVOS TEMPORÁRIOS
+# ============================================================
+
+*.tmp
+*.temp
+*.bak
+*.old
+*~
