@@ -59,6 +59,28 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // ============================================================
+  // ATUALIZAR HOME
+  // ============================================================
+
+  Future<void> atualizarHome() async {
+    HomeController homeController = Provider.of<HomeController>(
+      context,
+      listen: false,
+    );
+
+    DespesasRecorrentesController despesasController =
+        Provider.of<DespesasRecorrentesController>(context, listen: false);
+
+    DateTime agora = DateTime.now();
+
+    DateTime hoje = DateTime(agora.year, agora.month, agora.day);
+
+    await homeController.alterarDataSelecionada(hoje);
+
+    await despesasController.carregarProximosVencimentos();
+  }
+
+  // ============================================================
   // ADICIONAR ENTRADA
   // ============================================================
 
@@ -362,7 +384,7 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: const Color(0xFFF5F5F7),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: homeController.carregarDados,
+          onRefresh: atualizarHome,
           child: construirConteudoHome(homeController, despesasController),
         ),
       ),
