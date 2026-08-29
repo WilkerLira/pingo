@@ -39,8 +39,29 @@ class _TelaLancamentosState extends State<TelaLancamentos> {
   }
 
   void carregarDadosDepoisDoPrimeiroFrame(Duration duracao) {
-    carregarDados();
+    carregarDataAtual();
   }
+
+  // ============================================================
+  // CARREGAR DATA ATUAL AO ABRIR A TELA
+  // ============================================================
+
+  Future<void> carregarDataAtual() async {
+    HomeController controller = Provider.of<HomeController>(
+      context,
+      listen: false,
+    );
+
+    DateTime agora = DateTime.now();
+
+    DateTime hoje = DateTime(agora.year, agora.month, agora.day);
+
+    await controller.alterarDataSelecionada(hoje);
+  }
+
+  // ============================================================
+  // ATUALIZAR DADOS DA DATA SELECIONADA
+  // ============================================================
 
   Future<void> carregarDados() async {
     HomeController controller = Provider.of<HomeController>(
