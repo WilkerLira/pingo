@@ -314,36 +314,34 @@ class _TelaLancamentosState extends State<TelaLancamentos> {
         borderRadius: BorderRadius.circular(18),
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Row(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // ============================================================
-              // ÍCONE DO LANÇAMENTO
+              // PARTE SUPERIOR DO CARD
               // ============================================================
 
-              Container(
-                width: 42,
-                height: 42,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFF0F3F7),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(icone, color: const Color(0xFF1E3A5F)),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  construirIconeLancamento(icone),
+
+                  const SizedBox(width: 12),
+
+                  Expanded(child: construirInformacoesLancamento(lancamento)),
+                ],
               ),
 
-              const SizedBox(width: 12),
+              const SizedBox(height: 12),
+
+              const Divider(height: 1, thickness: 1, color: Color(0xFFF0F0F0)),
+
+              const SizedBox(height: 8),
 
               // ============================================================
-              // INFORMAÇÕES DO LANÇAMENTO
+              // PARTE INFERIOR DO CARD
               // ============================================================
-              Expanded(child: construirInformacoesLancamento(lancamento)),
-
-              const SizedBox(width: 8),
-
-              // ============================================================
-              // VALOR E AÇÕES
-              // ============================================================
-              construirValorEAcoes(
+              construirRodapeLancamento(
                 lancamento: lancamento,
                 controller: controller,
                 sinal: sinal,
@@ -356,6 +354,22 @@ class _TelaLancamentosState extends State<TelaLancamentos> {
   }
 
   // ============================================================
+  // ÍCONE DO LANÇAMENTO
+  // ============================================================
+
+  Widget construirIconeLancamento(IconData icone) {
+    return Container(
+      width: 42,
+      height: 42,
+      decoration: const BoxDecoration(
+        color: Color(0xFFF0F3F7),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(icone, color: const Color(0xFF1E3A5F)),
+    );
+  }
+
+  // ============================================================
   // INFORMAÇÕES DO LANÇAMENTO
   // ============================================================
 
@@ -363,13 +377,25 @@ class _TelaLancamentosState extends State<TelaLancamentos> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // ============================================================
+        // CATEGORIA
+        // ============================================================
+
         Text(
           lancamento.categoria,
-          maxLines: 2,
+          maxLines: 1,
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+          softWrap: false,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF202124),
+          ),
         ),
 
+        // ============================================================
+        // OBSERVAÇÃO
+        // ============================================================
         if (lancamento.observacao != null &&
             lancamento.observacao!.isNotEmpty) ...[
           const SizedBox(height: 4),
@@ -378,12 +404,19 @@ class _TelaLancamentosState extends State<TelaLancamentos> {
             lancamento.observacao!,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 12, color: Colors.black54),
+            style: const TextStyle(
+              fontSize: 12,
+              height: 1.3,
+              color: Colors.black54,
+            ),
           ),
         ],
 
+        // ============================================================
+        // DATA E HORA
+        // ============================================================
         if (lancamento.criadoEm != null) ...[
-          const SizedBox(height: 6),
+          const SizedBox(height: 7),
 
           construirDataHoraLancamento(lancamento),
         ],
@@ -392,37 +425,46 @@ class _TelaLancamentosState extends State<TelaLancamentos> {
   }
 
   // ============================================================
-  // VALOR E AÇÕES DO LANÇAMENTO
+  // RODAPÉ DO LANÇAMENTO
   // ============================================================
 
-  Widget construirValorEAcoes({
+  Widget construirRodapeLancamento({
     required LancamentoModel lancamento,
     required HomeController controller,
     required String sinal,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+    return Row(
       children: [
-        Text(
-          '$sinal ${formatoMoeda.format(lancamento.valor)}',
-          textAlign: TextAlign.right,
-          style: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w800,
-            color: Color(0xFF1E3A5F),
+        // ============================================================
+        // VALOR
+        // ============================================================
+
+        Expanded(
+          child: Text(
+            '$sinal ${formatoMoeda.format(lancamento.valor)}',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w800,
+              color: Color(0xFF1E3A5F),
+            ),
           ),
         ),
 
-        const SizedBox(height: 6),
+        const SizedBox(width: 8),
 
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            construirBotaoEditar(lancamento, controller),
+        // ============================================================
+        // EDITAR
+        // ============================================================
+        construirBotaoEditar(lancamento, controller),
 
-            construirBotaoExcluir(lancamento, controller),
-          ],
-        ),
+        const SizedBox(width: 2),
+
+        // ============================================================
+        // EXCLUIR
+        // ============================================================
+        construirBotaoExcluir(lancamento, controller),
       ],
     );
   }
@@ -608,17 +650,17 @@ class _TelaLancamentosState extends State<TelaLancamentos> {
     String horaFormatada = lancamento.obterHoraFormatada();
 
     return Row(
-      mainAxisSize: MainAxisSize.min,
       children: [
         const Icon(Icons.schedule_outlined, size: 14, color: Colors.black45),
 
         const SizedBox(width: 4),
 
-        Flexible(
+        Expanded(
           child: Text(
             '$dataFormatada • $horaFormatada',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
+            softWrap: false,
             style: const TextStyle(
               fontSize: 11,
               color: Colors.black45,

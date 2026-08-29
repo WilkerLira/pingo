@@ -441,40 +441,69 @@ class _HomeScreenState extends State<HomeScreen> {
   // ============================================================
 
   Widget construirNavegacaoInferior() {
-    return NavigationBar(
-      selectedIndex: 0,
-      onDestinationSelected: alterarDestinoNavegacao,
-      destinations: const [
-        NavigationDestination(
-          icon: Icon(Icons.home_outlined),
-          selectedIcon: Icon(Icons.home),
-          label: 'Início',
+    return NavigationBarTheme(
+      data: NavigationBarThemeData(
+        labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>(
+          construirEstiloTextoNavegacao,
         ),
+      ),
+      child: NavigationBar(
+        selectedIndex: 0,
+        onDestinationSelected: alterarDestinoNavegacao,
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home),
+            label: 'Início',
+          ),
 
-        NavigationDestination(
-          icon: Icon(Icons.receipt_long_outlined),
-          selectedIcon: Icon(Icons.receipt_long),
-          label: 'Lançamentos',
-        ),
+          NavigationDestination(
+            icon: Icon(Icons.receipt_long_outlined),
+            selectedIcon: Icon(Icons.receipt_long),
+            label: 'Lançamentos',
+          ),
 
-        NavigationDestination(
-          icon: Icon(Icons.add_circle_outline),
-          selectedIcon: Icon(Icons.add_circle),
-          label: 'Adicionar',
-        ),
+          NavigationDestination(
+            icon: Icon(Icons.add_circle_outline),
+            selectedIcon: Icon(Icons.add_circle),
+            label: 'Adicionar',
+          ),
 
-        NavigationDestination(
-          icon: Icon(Icons.bar_chart_outlined),
-          selectedIcon: Icon(Icons.bar_chart_rounded),
-          label: 'Relatórios',
-        ),
+          NavigationDestination(
+            icon: Icon(Icons.bar_chart_outlined),
+            selectedIcon: Icon(Icons.bar_chart_rounded),
+            label: 'Relatórios',
+          ),
 
-        NavigationDestination(
-          icon: Icon(Icons.more_horiz),
-          selectedIcon: Icon(Icons.more_horiz),
-          label: 'Mais',
-        ),
-      ],
+          NavigationDestination(
+            icon: Icon(Icons.more_horiz),
+            selectedIcon: Icon(Icons.more_horiz),
+            label: 'Mais',
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ============================================================
+  // ESTILO DO TEXTO DA NAVEGAÇÃO
+  // ============================================================
+
+  TextStyle construirEstiloTextoNavegacao(Set<WidgetState> estados) {
+    bool estaSelecionado = estados.contains(WidgetState.selected);
+
+    if (estaSelecionado) {
+      return const TextStyle(
+        fontSize: 11,
+        fontWeight: FontWeight.w700,
+        color: Color(0xFF1E3A5F),
+      );
+    }
+
+    return const TextStyle(
+      fontSize: 11,
+      fontWeight: FontWeight.w500,
+      color: Colors.black54,
     );
   }
 }
